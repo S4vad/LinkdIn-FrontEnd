@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
 export const SignUp = () => {
   let [show, setShow] = useState(false);
@@ -14,6 +15,10 @@ export const SignUp = () => {
     email: "",
     password: "",
   });
+
+  const { userData, setUserData } = useContext(UserContext);
+  console.log("the context user data", userData);
+
   let navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,9 +34,9 @@ export const SignUp = () => {
     setLoading(true);
     try {
       const result = await axios.post("/api/auth/signup", formData);
-      console.log(result);
+      setUserData(result.data);
+      navigate("/");
       setError("");
-
       setFormData({
         firstName: "",
         lastName: "",
