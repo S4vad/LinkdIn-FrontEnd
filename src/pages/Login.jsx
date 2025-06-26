@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.svg"
+import { UserContext } from '../context/UserContext';
 
 export const Login = () => {
  let [show, setShow] = useState(false);
@@ -12,6 +13,7 @@ export const Login = () => {
     password: "",
   });
   let navigate = useNavigate();
+  let {setUserData}=useContext(UserContext)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +28,8 @@ export const Login = () => {
     setLoading(true);
     try {
       const result = await axios.post("/api/auth/login", formData);
-      console.log(result);
+      setUserData(result.data)
+      navigate('/')
       setError("");
 
       setFormData({

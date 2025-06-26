@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo2 from "../assets/logo2.png";
 import { IoSearch } from "react-icons/io5";
 import { MdHome } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import { MdNotifications } from "react-icons/md";
 import dp from "../assets/dp.jpeg";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Nav = () => {
   let [activeSearch, setActiveSearch] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  let [showPopup, setShowPopup] = useState(false);
+  let { userData, setUserData } = useContext(UserContext);
+  let navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      const response = await axios.get("api/auth/logout");
+      setUserData(null);
+      navigate("/login");
+      console.log(response);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div className="w-full h-[80px] bg-white flex md:justify-around justify-between px-[10px] items-center shadow-lg fixed top-0">
@@ -44,10 +60,25 @@ export const Nav = () => {
 
       <div className="flex items-center gap-[20px] relative">
         {showPopup && (
-          <div className="w-[300px] h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px]">
+          <div className="w-[300px] min-h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px]">
             <div className="rounded-full overflow-hidden size-[50px]">
               <img src={dp} alt="dp" className="w-full h-full" />
             </div>
+            <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
+            <button className="w-full  rounded-full border-2 border-blue-400 bg-white text-blue-400 p-[5px] cursor-pointer">
+              View Profile
+            </button>
+            <div className="w-full h-[1px] bg-gray-500"></div>
+            <div className="flex  items-center gap-2 justify-start w-full text-gray-600 ">
+              <FaUserFriends className="size-[23px] text-gray-600" />
+              <span>My networks</span>
+            </div>
+            <button
+              className="w-full  rounded-full border-2 p-[5px] border-red-400 bg-white text-red-400 cursor-pointer"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
           </div>
         )}
 
@@ -63,6 +94,7 @@ export const Nav = () => {
           <MdNotifications className="size-[23px] text-gray-600" />
           <span className="hidden lg:block">notifications</span>
         </div>
+
         <div
           className="rounded-full overflow-hidden size-[50px] cursor-pointer"
           onClick={() => setShowPopup((prev) => !prev)}
