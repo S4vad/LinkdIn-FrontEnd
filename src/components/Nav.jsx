@@ -62,7 +62,7 @@ export const Nav = () => {
         {showPopup && (
           <div className="w-[300px] min-h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px]">
             <div className="rounded-full overflow-hidden size-[50px]">
-              <img src={dp} alt="dp" className="w-full h-full" />
+              <img src={userData.profileImage || dp} alt="dp" className="w-full h-full" />
             </div>
             <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
             <button className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer">
@@ -99,7 +99,7 @@ export const Nav = () => {
           className="rounded-full overflow-hidden size-[50px] cursor-pointer"
           onClick={() => setShowPopup((prev) => !prev)}
         >
-          <img src={dp} alt="dp" className="w-full h-full" />
+          <img src={userData.profileImage || dp} alt="dp" className="w-full h-full" />
         </div>
       </div>
     </div>

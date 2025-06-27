@@ -5,13 +5,14 @@ import { UserContext } from "../context/UserContext";
 import { Home } from "../pages/Home";
 import { Login } from "../pages/Login";
 import { SignUp } from "../pages/SignUp";
+import {ScaleLoader} from "react-spinners"
 
 export const AppRouter = () => {
   const { userData,loading } = useContext(UserContext);
     if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <div className="loader">Loading...</div> 
+        <ScaleLoader  color="#93c5fd" speedMultiplier={0.5}/>
       </div>
     );
   }
