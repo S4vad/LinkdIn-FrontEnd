@@ -27,7 +27,7 @@ export const Nav = () => {
   };
 
   return (
-    <div className="w-full h-[80px] bg-white flex md:justify-around justify-between px-[10px] items-center shadow-lg fixed top-0">
+    <div className="w-full h-[80px] bg-white flex md:justify-around justify-between px-[10px] items-center shadow-lg fixed top-0 left-0 z-[80]">
       <div className="flex items-center justify-center gap-[10px]">
         <img
           className="size-[50px]"
@@ -65,7 +65,7 @@ export const Nav = () => {
               <img src={dp} alt="dp" className="w-full h-full" />
             </div>
             <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
-            <button className="w-full  rounded-full border-2 border-blue-400 bg-white text-blue-400 p-[5px] cursor-pointer">
+            <button className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer">
               View Profile
             </button>
             <div className="w-full h-[1px] bg-gray-500"></div>
