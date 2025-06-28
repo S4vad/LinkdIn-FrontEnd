@@ -9,9 +9,11 @@ import { EditProfile } from "../components/EditProfile";
 import { RxCross1 } from "react-icons/rx";
 import { BsImage } from "react-icons/bs";
 import axios from "axios";
+import { Post } from "../components/Post";
 
 export const Home = () => {
-  let { userData, edit, setEdit } = useContext(UserContext);
+  let { userData, edit, setEdit, postData, setPostData } =
+    useContext(UserContext);
   let [frontEndImage, setFrontEndImage] = useState(null);
   let [backEndImage, setBackEndImage] = useState(null);
   let [description, setDescription] = useState("");
@@ -38,6 +40,7 @@ export const Home = () => {
 
       const response = await axios.post("/api/post/create", data);
       if (response.status == 200) {
+        setPostData((prev) => [response.data.data, ...prev]);
         setDescription("");
         setFrontEndImage(null);
         setBackEndImage(null);
@@ -49,6 +52,13 @@ export const Home = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClosePost = () => {
+    setShowPost(false);
+    setDescription(""); // clear text
+    setFrontEndImage(null); // clear preview
+    setBackEndImage(null); // clear file
   };
 
   return (
@@ -101,10 +111,10 @@ export const Home = () => {
       {showPost && (
         <div className="w-full h-full fixed top-0 left-0 z-[100] flex items-center justify-center">
           <div className="absolute w-full h-full bg-black opacity-[0.5]"></div>
-       <div className="relative w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg z-[200] p-[20px] flex flex-col items-start justify-start gap-5">
+          <div className="relative w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg z-[200] p-[20px] flex flex-col items-start justify-start gap-5">
             <div
               className="absolute top-[20px] right-[20px] cursor-pointer"
-              onClick={() => setShowPost(false)}
+              onClick={handleClosePost}
             >
               <RxCross1 className="size-[20px] text-gray-800 font-bold" />
             </div>
@@ -123,16 +133,23 @@ export const Home = () => {
               value={description}
               className={`w-full ${
                 frontEndImage ? "h-[200px]" : "h-[550px]"
-              } outline-none border-none p-3 resize-none text-[19px]`}
+              } outline-none border-none p-3 resize-none `}
               placeholder="what do you want to talk about...?"
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
             {frontEndImage && (
-              <img className="size-[350px] rounded-lg" src={frontEndImage || ""} />
+              <div className="relative max-w-[400px] max-h-[300px] overflow-auto rounded-lg">
+                {" "}
+                <img
+                  className="w-full h-auto object-contain"
+                  src={frontEndImage || ""}
+                />
+                <RxCross1 className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer" onClick={()=>setFrontEndImage(null)} />
+              </div>
             )}
 
             <div className="w-full">
-              <div className="p-[15px] border-b-2 w-full ">
+              <div className="pb-2 border-b-2 w-full ">
                 <BsImage
                   className="text-gray-500 size-[25px] cursor-pointer"
                   onClick={() => image.current.click()}
@@ -148,7 +165,7 @@ export const Home = () => {
 
               <div className="flex justify-end">
                 <button
-                  className="w-[80px] h-[35px] rounded-full bg-[#24b2ff] mt-[20px] text-white cursor-pointer text-lg p-2 flex  items-center justify-center  "
+                  className="w-[80px] h-[35px] rounded-full bg-[#24b2ff] mt-[20px] text-white cursor-pointer  p-2 flex  items-center justify-center  "
                   onClick={handlePost}
                   disabled={loading}
                 >
@@ -160,7 +177,7 @@ export const Home = () => {
         </div>
       )}
 
-      <div className="w-full lg:w-[50%] min-h-screen  bg-[#f0efe7] ">
+      <div className="w-full lg:w-[50%] min-h-screen  bg-[#f0efe7] space-y-5">
         <div className="w-full h-[100px] bg-white shadow-lg rounded-lg  flex items-center justify-center gap-5 sm:gap-10 sm:px-10">
           <div className="rounded-full overflow-hidden size-[66px]  cursor-pointer ">
             <img
@@ -176,6 +193,9 @@ export const Home = () => {
             start a post
           </button>
         </div>
+        {postData.map((post) => (
+          <Post key={post._id} {...post} />
+        ))}
       </div>
       <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg"></div>
     </div>

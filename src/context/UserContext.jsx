@@ -7,6 +7,7 @@ export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState(false);
+  const [postData, setPostData] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -21,11 +22,23 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const getPost = async () => {
+    try {
+      const response = await axios("/api/post/getpost");
+      if (response.status === 200) {
+        setPostData(response.data.data);
+      }
+    } catch (error) {
+      console.log("error fetching posts", error.message);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    getPost();
   }, []);
 
-  const value = { userData, setUserData, loading ,edit,setEdit};
+  const value = { userData, setUserData, loading, edit, setEdit, postData ,setPostData };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
