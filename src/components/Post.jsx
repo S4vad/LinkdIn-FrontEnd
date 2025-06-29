@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserContext";
 import { IoSendSharp } from "react-icons/io5";
 import dp from "../assets/dp.jpeg";
 import { io } from "socket.io-client";
+import { ConnectionButton } from "./ConnectionButton";
 
 const socket = io(
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
@@ -64,14 +65,14 @@ export const Post = (props) => {
 
     socket.on("commentUpdated", ({ postId, comments }) => {
       if (postId == _id) {
-        console.log('the comment osket',comments)
+        console.log("the comment osket", comments);
         setCommentContents(comments);
       }
     });
 
     return () => {
       socket.off("likeUpdated");
-      socket.off('commentUpdated')
+      socket.off("commentUpdated");
     };
   }, [_id]);
 
@@ -94,9 +95,8 @@ export const Post = (props) => {
             <span className="text-sm">{moment(createdAt).fromNow()}</span>
           </div>
         </div>
-        <button className=" rounded-full border-2 h-[35px] border-[#2dc0ff] bg-white text-[#2dc0ff] px-4 cursor-pointer flex items-center justify-center ">
-          connect
-        </button>
+
+        {userData._id != author._id && <ConnectionButton userId={author._id} />}
       </div>
 
       {/*post content */}

@@ -9,6 +9,7 @@ import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 export const Nav = () => {
   let [activeSearch, setActiveSearch] = useState(false);
   let [showPopup, setShowPopup] = useState(false);
@@ -69,7 +70,7 @@ export const Nav = () => {
               View Profile
             </button>
             <div className="w-full h-[1px] bg-gray-500"></div>
-            <div className="flex  items-center gap-2 justify-start w-full text-gray-600 ">
+            <div className="flex  items-center gap-2 justify-start w-full text-gray-600 " onClick={()=>navigate("/network")}>
               <FaUserFriends className="size-[23px] text-gray-600" />
               <span>My networks</span>
             </div>
@@ -86,7 +87,7 @@ export const Nav = () => {
           <MdHome className="size-[23px] text-gray-600" />
           <span>Home</span>
         </div>
-        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden">
+        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden" onClick={()=>navigate("/network")}>
           <FaUserFriends className="size-[23px] text-gray-600" />
           <span>My networks</span>
         </div>
