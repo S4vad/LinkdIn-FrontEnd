@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { BiLike } from "react-icons/bi";
 import { FaRegCommentDots } from "react-icons/fa6";
@@ -6,6 +6,14 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import { IoSendSharp } from "react-icons/io5";
 import dp from "../assets/dp.jpeg";
+import { io } from "socket.io-client";
+
+const socket = io(
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+  {
+    withCredentials: true,
+  }
+);
 
 export const Post = (props) => {
   const { _id, like, comments, image, description, author, createdAt } = props;
@@ -47,7 +55,25 @@ export const Post = (props) => {
     }
   };
 
+  useEffect(() => {
+    socket.on("likeUpdated", ({ postId, likes }) => {
+      if (postId == _id) {
+        setLikes(likes);
+      }
+    });
 
+    socket.on("commentUpdated", ({ postId, comments }) => {
+      if (postId == _id) {
+        console.log('the comment osket',comments)
+        setCommentContents(comments);
+      }
+    });
+
+    return () => {
+      socket.off("likeUpdated");
+      socket.off('commentUpdated')
+    };
+  }, [_id]);
 
   return (
     <div className="w-full min-h-[500px] bg-white rounded-lg shadow-lg p-5 flex flex-col gap-5 ">
@@ -155,7 +181,9 @@ export const Post = (props) => {
                   <div className="text-[16px] font-semibold">
                     {`${com.user.firstName} ${com.user.lastName}`}
                   </div>
-                  <div className="text-sm">( {moment(com.createdAt).fromNow()} )</div>
+                  <div className="text-sm">
+                    ( {moment(com.createdAt).fromNow()} )
+                  </div>
                 </div>
                 <div className="pl-[57px]">{com.content}</div>
               </div>
