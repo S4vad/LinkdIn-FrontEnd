@@ -8,12 +8,13 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState(false);
   const [postData, setPostData] = useState([]);
+  const [profileData, setProfileData] = useState([]);
 
   const fetchData = async () => {
     try {
       const result = await axios.get("/api/user/currentuser");
-      console.log("the result form tcon", result);
       setUserData(result.data);
+    
     } catch (error) {
       setUserData(null);
       console.log("error fetching user data", error);
@@ -33,12 +34,34 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const handleGetProfile = async (userName) => {
+    try {
+      const result = await axios.get(`/api/user/profile/${userName}`);
+      setProfileData(result.data);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchData();
     getPost();
   }, []);
 
-  const value = { userData, setUserData, loading, edit, setEdit, postData ,setPostData };
+  const value = {
+    userData,
+    setUserData,
+    loading,
+    edit,
+    setEdit,
+    postData,
+    setPostData,
+    profileData,
+    setProfileData,
+    handleGetProfile
+  };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

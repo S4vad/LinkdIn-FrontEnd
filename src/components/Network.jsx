@@ -45,6 +45,7 @@ export const Network = () => {
 
   useEffect(() => {
     handleGetRequests();
+
   }, []);
   return (
     <div className="w-full h-screen bg-[#f0efe7] pt-[100px] flex flex-col  items-center gap-3">

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 export const Nav = () => {
   let [activeSearch, setActiveSearch] = useState(false);
   let [showPopup, setShowPopup] = useState(false);
-  let { userData, setUserData } = useContext(UserContext);
+  let { userData, setUserData, handleGetProfile } = useContext(UserContext);
   let navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -23,6 +23,13 @@ export const Nav = () => {
       console.log(response);
     } catch (error) {
       console.error("Logout error:", error);
+    }
+  };
+
+    const handleProfileClick = async () => {
+    const success = await handleGetProfile(userData.userName);
+    if (success) {
+      navigate(`/profile/${userData.userName}`);
     }
   };
 
@@ -74,7 +81,7 @@ export const Nav = () => {
             <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
             <button
               className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer"
-              onClick={() => navigate("/profile")}
+              onClick={ handleProfileClick}
             >
               View Profile
             </button>
@@ -95,7 +102,10 @@ export const Nav = () => {
           </div>
         )}
 
-        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer" onClick={()=>navigate('/')}>
+        <div
+          className="lg:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <MdHome className="size-[23px] text-gray-600" />
           <span>Home</span>
         </div>

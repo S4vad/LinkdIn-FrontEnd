@@ -8,6 +8,7 @@ import { IoSendSharp } from "react-icons/io5";
 import dp from "../assets/dp.jpeg";
 import { io } from "socket.io-client";
 import { ConnectionButton } from "./ConnectionButton";
+import { useNavigate } from "react-router-dom";
 
 const socket = io(
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
@@ -19,12 +20,13 @@ const socket = io(
 export const Post = (props) => {
   const { _id, like, comments, image, description, author, createdAt } = props;
 
-  let { userData } = useContext(UserContext);
+  let { userData, handleGetProfile } = useContext(UserContext);
   let [showMore, setShowMore] = useState(false);
   let [likes, setLikes] = useState(like);
   let [commentContents, setCommentContents] = useState(comments);
   let [frontEndComment, setFrontEndComment] = useState("");
   let [openComment, setOpenComment] = useState(false);
+  const navigate = useNavigate();
 
   const handleLike = async () => {
     try {
@@ -56,6 +58,13 @@ export const Post = (props) => {
     }
   };
 
+  const handleProfileClick = async () => {
+    const success = await handleGetProfile(author.userName);
+    if (success) {
+      navigate(`/profile/${author.userName}`);
+    }
+  };
+
   useEffect(() => {
     socket.on("likeUpdated", ({ postId, likes }) => {
       if (postId == _id) {
@@ -78,9 +87,12 @@ export const Post = (props) => {
 
   return (
     <div className="w-full min-h-[500px] bg-white rounded-lg shadow-lg p-5 flex flex-col gap-5 ">
-      <div className="flex justify-between ">
-        <div className="flex gap-2 ">
-          <div className="rounded-full overflow-hidden size-[70px]">
+      <div className="flex justify-between  items-center">
+        <div className="flex gap-2 justify-center items-center  ">
+          <div
+            className="rounded-full overflow-hidden size-[70px] "
+            onClick={handleProfileClick}
+          >
             <img
               src={author.profileImage || ""}
               alt="dp"

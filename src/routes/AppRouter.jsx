@@ -41,7 +41,7 @@ export const AppRouter = () => {
       element: userData ? <Network /> : <Login />,
     },
         {
-      path: "/profile",
+      path: "/profile/:userName",
       element: userData ? <Profile /> : <Login />,
     },
   ]);

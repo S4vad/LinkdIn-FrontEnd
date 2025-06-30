@@ -28,6 +28,7 @@ export const ConnectionButton = ({ userId }) => {
   };
 
   const handleGetStatus = async () => {
+    if (!userId) return;
     try {
       const response = await axios.get(`/api/connection/status/${userId}`);
       console.log("getConnectionStatus response:", response);
@@ -59,7 +60,8 @@ export const ConnectionButton = ({ userId }) => {
   };
 
   useEffect(() => {
-    if (!userData?._id) return;
+    if (!userId || !userData?._id) return;
+
     socket.emit("register", userData._id);
     handleGetStatus();
 
@@ -73,6 +75,8 @@ export const ConnectionButton = ({ userId }) => {
       socket.off("statusUpdate");
     };
   }, [userId]);
+
+  if (!userId) return null;
 
   return (
     <div>
