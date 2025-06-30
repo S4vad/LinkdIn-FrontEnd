@@ -4,6 +4,14 @@ import axios from "axios";
 import dp from "../assets/dp.jpeg";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
+import { io } from "socket.io-client";
+
+const socket = io(
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+  {
+    withCredentials: true,
+  }
+);
 
 export const Network = () => {
   let [connections, setConnections] = useState([]);

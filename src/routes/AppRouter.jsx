@@ -11,6 +11,7 @@ import { Login } from "../pages/Login";
 import { SignUp } from "../pages/SignUp";
 import { ScaleLoader } from "react-spinners";
 import { Network } from "../components/Network";
+import { Profile} from  "../pages/Profile";
 
 export const AppRouter = () => {
   const { userData, loading } = useContext(UserContext);
@@ -38,6 +39,10 @@ export const AppRouter = () => {
     {
       path: "/network",
       element: userData ? <Network /> : <Login />,
+    },
+        {
+      path: "/profile",
+      element: userData ? <Profile /> : <Login />,
     },
   ]);
 

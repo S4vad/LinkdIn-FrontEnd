@@ -9,7 +9,6 @@ import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 export const Nav = () => {
   let [activeSearch, setActiveSearch] = useState(false);
   let [showPopup, setShowPopup] = useState(false);
@@ -29,12 +28,15 @@ export const Nav = () => {
 
   return (
     <div className="w-full h-[80px] bg-white flex md:justify-around justify-between px-[10px] items-center shadow-lg fixed top-0 left-0 z-[80]">
-      <div className="flex items-center justify-center gap-[10px]">
+      <div className="flex items-center justify-center gap-[10px] ">
         <img
-          className="size-[50px]"
+          className="size-[50px] cursor-pointer"
           src={logo2}
           alt=""
-          onClick={() => setActiveSearch(false)}
+          onClick={() => {
+            setActiveSearch(false);
+            navigate("/");
+          }}
         />
         {!activeSearch && (
           <IoSearch
@@ -63,14 +65,24 @@ export const Nav = () => {
         {showPopup && (
           <div className="w-[300px] min-h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px]">
             <div className="rounded-full overflow-hidden size-[50px]">
-              <img src={userData.profileImage || dp} alt="dp" className="w-full h-full" />
+              <img
+                src={userData.profileImage || dp}
+                alt="dp"
+                className="w-full h-full"
+              />
             </div>
             <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
-            <button className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer">
+            <button
+              className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer"
+              onClick={() => navigate("/profile")}
+            >
               View Profile
             </button>
             <div className="w-full h-[1px] bg-gray-500"></div>
-            <div className="flex  items-center gap-2 justify-start w-full text-gray-600 " onClick={()=>navigate("/network")}>
+            <div
+              className="flex  items-center gap-2 justify-start w-full text-gray-600 cursor-pointer"
+              onClick={() => navigate("/network")}
+            >
               <FaUserFriends className="size-[23px] text-gray-600" />
               <span>My networks</span>
             </div>
@@ -83,15 +95,18 @@ export const Nav = () => {
           </div>
         )}
 
-        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden">
+        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer" onClick={()=>navigate('/')}>
           <MdHome className="size-[23px] text-gray-600" />
           <span>Home</span>
         </div>
-        <div className="lg:flex flex-col items-center justify-center text-gray-600 hidden" onClick={()=>navigate("/network")}>
+        <div
+          className="lg:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer"
+          onClick={() => navigate("/network")}
+        >
           <FaUserFriends className="size-[23px] text-gray-600" />
           <span>My networks</span>
         </div>
-        <div className="flex flex-col items-center justify-center text-gray-600 ">
+        <div className="flex flex-col items-center justify-center text-gray-600 cursor-pointer">
           <MdNotifications className="size-[23px] text-gray-600" />
           <span className="hidden lg:block">notifications</span>
         </div>
@@ -100,7 +115,11 @@ export const Nav = () => {
           className="rounded-full overflow-hidden size-[50px] cursor-pointer"
           onClick={() => setShowPopup((prev) => !prev)}
         >
-          <img src={userData.profileImage || dp} alt="dp" className="w-full h-full" />
+          <img
+            src={userData.profileImage || dp}
+            alt="dp"
+            className="w-full h-full"
+          />
         </div>
       </div>
     </div>

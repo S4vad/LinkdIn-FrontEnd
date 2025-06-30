@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,7 @@ export const ConnectionButton = ({ userId }) => {
   const handleSendConnection = async () => {
     try {
       const response = await axios.post(`/api/connection/send/${userId}`);
+      setStatus("pending");
 
       console.log(response);
     } catch (error) {
@@ -27,17 +28,16 @@ export const ConnectionButton = ({ userId }) => {
   };
 
   const handleGetStatus = async () => {
-  try {
-    const response = await axios.get(`/api/connection/status/${userId}`);
-    console.log("getConnectionStatus response:", response);
-    if (response) {
-      setStatus(response.data.status); 
+    try {
+      const response = await axios.get(`/api/connection/status/${userId}`);
+      console.log("getConnectionStatus response:", response);
+      if (response) {
+        setStatus(response.data.status);
+      }
+    } catch (error) {
+      console.log("handleGetStatus error:", error);
     }
-  } catch (error) {
-    console.log("handleGetStatus error:", error);
-  }
-};
-
+  };
 
   const handleRemoveConnection = async () => {
     try {
