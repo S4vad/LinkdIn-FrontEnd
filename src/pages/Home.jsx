@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Nav } from "../components/Nav";
 import dp from "../assets/dp.jpeg";
 import { FaPlus } from "react-icons/fa6";
@@ -10,15 +10,19 @@ import { RxCross1 } from "react-icons/rx";
 import { BsImage } from "react-icons/bs";
 import axios from "axios";
 import { Post } from "../components/Post";
+import { useNavigate } from "react-router-dom";
+import { ConnectionButton } from "../components/ConnectionButton";
 
 export const Home = () => {
-  let { userData, edit, setEdit, postData, setPostData } =
+  let { userData, edit, setEdit, postData, setPostData, handleGetProfile } =
     useContext(UserContext);
   let [frontEndImage, setFrontEndImage] = useState(null);
   let [backEndImage, setBackEndImage] = useState(null);
   let [description, setDescription] = useState("");
   let [loading, setLoading] = useState(false);
   let [showPost, setShowPost] = useState(false);
+  let [suggestedUser, setSuggestedUser] = useState([]);
+  let navigate = useNavigate();
 
   let image = useRef();
 
@@ -54,12 +58,32 @@ export const Home = () => {
     }
   };
 
+  const handleSuggestedUser = async () => {
+    try {
+      const response = await axios.get("/api/user/suggested-user");
+      setSuggestedUser(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleProfileClick = async () => {
+    const success = await handleGetProfile(userData.userName);
+    if (success) {
+      navigate(`/profile/${userData.userName}`);
+    }
+  };
+
   const handleClosePost = () => {
     setShowPost(false);
     setDescription(""); // clear text
     setFrontEndImage(null); // clear preview
     setBackEndImage(null); // clear file
   };
+
+  useEffect(() => {
+    handleSuggestedUser();
+  }, []);
 
   return (
     <div className="w-full min-h-screen bg-[#f0efe7] pt-[100px]  flex flex-col  lg:flex-row items-start  justify-center gap-[20px] px-10 relative ">
@@ -144,7 +168,10 @@ export const Home = () => {
                   className="w-full h-auto object-contain"
                   src={frontEndImage || ""}
                 />
-                <RxCross1 className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer" onClick={()=>setFrontEndImage(null)} />
+                <RxCross1
+                  className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1 cursor-pointer"
+                  onClick={() => setFrontEndImage(null)}
+                />
               </div>
             )}
 
@@ -197,7 +224,35 @@ export const Home = () => {
           <Post key={post._id} {...post} />
         ))}
       </div>
-      <div className="w-full lg:w-[25%] min-h-[200px] bg-white shadow-lg"></div>
+      {suggestedUser?.length > 0 ? (
+        <div className="w-full lg:w-[25%] min-h-[100px] bg-white shadow-lg hidden lg:flex flex-col  ">
+        <div className=" text-lg text-gray-500 px-4 py-3"> Suggested users</div>
+          {suggestedUser.map((user) => (
+            <div
+              className="flex gap-5 items-center border-b-1 border-b-gray-300 p-3 hover:bg-gray-50 cursor-pointer rounded-lg"
+              onClick={handleProfileClick}
+              key={user._id}
+            >
+              <div className="rounded-full overflow-hidden size-[50px] ">
+                <img
+                  src={user.profileImage || dp}
+                  alt="dp"
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <span className="font-semibold">
+                  {user.firstName} {user.lastName}
+                </span>
+                <span className="text-sm text-gray-800">{user.headline}</span>
+              </div>
+               {userData._id != user._id && <ConnectionButton userId={user._id} />}
+            </div>
+          ))}
+        </div>
+      ):(
+        <div className="text-lg p-6 text-gray-800 "> No suggested user found</div>
+      )}
     </div>
   );
 };

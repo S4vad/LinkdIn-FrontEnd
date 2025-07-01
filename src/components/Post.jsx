@@ -94,7 +94,7 @@ export const Post = (props) => {
             onClick={handleProfileClick}
           >
             <img
-              src={author.profileImage || ""}
+              src={author.profileImage || dp}
               alt="dp"
               className="w-full h-full"
             />
