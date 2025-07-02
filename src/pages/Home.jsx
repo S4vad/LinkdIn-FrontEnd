@@ -20,7 +20,7 @@ export const Home = () => {
   let [backEndImage, setBackEndImage] = useState(null);
   let [description, setDescription] = useState("");
   let [loading, setLoading] = useState(false);
-  let [showPost, setShowPost] = useState(false);
+  let [showAddPost, setShowAddPost] = useState(false);
   let [suggestedUser, setSuggestedUser] = useState([]);
   let navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export const Home = () => {
         setDescription("");
         setFrontEndImage(null);
         setBackEndImage(null);
-        setShowPost(false);
+        setShowAddPost(false);
         console.log("post created successfully!");
       }
     } catch (error) {
@@ -75,7 +75,7 @@ export const Home = () => {
   };
 
   const handleClosePost = () => {
-    setShowPost(false);
+    setShowAddPost(false);
     setDescription(""); // clear text
     setFrontEndImage(null); // clear preview
     setBackEndImage(null); // clear file
@@ -86,10 +86,11 @@ export const Home = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-[#f0efe7] pt-[100px]  flex flex-col  lg:flex-row items-start  justify-center gap-[20px] px-10 relative ">
+    <div className="w-full min-h-screen bg-[#f0efe7] pt-[100px]  flex flex-col  lg:flex-row items-start  justify-center gap-[20px] md:px-10 relative ">
       {edit && <EditProfile />}
       <Nav />
 
+      
       <div className="w-full lg:w-[25%] min-h-[300px] bg-white shadow-lg p-4 rounded-lg relative">
         <div className="bg-gray-300 w-full h-[100px] rounded size-[25px] text-gray-800 ">
           <img
@@ -131,10 +132,12 @@ export const Home = () => {
           <IoPencil />
         </button>
       </div>
+      
 
-      {showPost && (
+      {/* post add popup */}
+      {showAddPost && (
         <div className="w-full h-full fixed top-0 left-0 z-[100] flex items-center justify-center">
-          <div className="absolute w-full h-full bg-black opacity-[0.5]"></div>
+          <div className="absolute w-full h-full bg-black opacity-[0.5]" onClick={()=>setShowAddPost(false)}></div>
           <div className="relative w-[90%] max-w-[500px] h-[600px] bg-white shadow-lg z-[200] p-[20px] flex flex-col items-start justify-start gap-5">
             <div
               className="absolute top-[20px] right-[20px] cursor-pointer"
@@ -204,6 +207,7 @@ export const Home = () => {
         </div>
       )}
 
+      {/* posts */}
       <div className="w-full lg:w-[50%] min-h-screen  bg-[#f0efe7] space-y-5">
         <div className="w-full h-[100px] bg-white shadow-lg rounded-lg  flex items-center justify-center gap-5 sm:gap-10 sm:px-10">
           <div className="rounded-full overflow-hidden size-[66px]  cursor-pointer ">
@@ -215,7 +219,7 @@ export const Home = () => {
           </div>
           <button
             className=" rounded-full h-[60%] border-2  w-[50%] sm:w-[70%] text-md sm:text-lg flex justify-start items-center px-10 hover:bg-gray-100"
-            onClick={() => setShowPost(true)}
+            onClick={() => setShowAddPost(true)}
           >
             start a post
           </button>
@@ -224,6 +228,9 @@ export const Home = () => {
           <Post key={post._id} {...post} />
         ))}
       </div>
+
+
+      {/* suggested users */}
       {suggestedUser?.length > 0 ? (
         <div className="w-full lg:w-[25%] min-h-[100px] bg-white shadow-lg hidden lg:flex flex-col  ">
         <div className=" text-lg text-gray-500 px-4 py-3"> Suggested users</div>
@@ -244,7 +251,7 @@ export const Home = () => {
                 <span className="font-semibold">
                   {user.firstName} {user.lastName}
                 </span>
-                <span className="text-sm text-gray-800">{user.headline}</span>
+                <span className="text-sm text-gray-800">{user.h8eadline}</span>
               </div>
                {userData._id != user._id && <ConnectionButton userId={user._id} />}
             </div>

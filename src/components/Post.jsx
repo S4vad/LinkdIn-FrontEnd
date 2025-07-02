@@ -9,6 +9,7 @@ import dp from "../assets/dp.jpeg";
 import { io } from "socket.io-client";
 import { ConnectionButton } from "./ConnectionButton";
 import { useNavigate } from "react-router-dom";
+import { BiSolidLike } from "react-icons/bi";
 
 const socket = io(
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
@@ -86,7 +87,7 @@ export const Post = (props) => {
   }, [_id]);
 
   return (
-    <div className="w-full min-h-[500px] bg-white rounded-lg shadow-lg p-5 flex flex-col gap-5 ">
+    <div className="w-full min-h-[200px] bg-white rounded-lg shadow-lg p-5 flex flex-col gap-5 ">
       <div className="flex justify-between  items-center">
         <div className="flex gap-2 justify-center items-center  ">
           <div
@@ -147,16 +148,25 @@ export const Post = (props) => {
         <div className="flex justify-between pb-4 border-b-2 border-gray-300">
           <div className="flex items-center gap-2 justify-center">
             <BiLike className="text-blue-300 text-xl" />
-            <span>{likes.length}</span>
+            <span>{likes?.length}</span>
           </div>
           <div className="space-x-3">
-            <span>{commentContents.length}</span>
+            <span>{commentContents?.length}</span>
             <span>comments</span>
           </div>
         </div>
-        <div className="flex items-center pt-4 justify-between w-[30%] text-lg ">
-          <div className="flex items-center gap-2 justify-center ">
-            <BiLike onClick={() => handleLike()} />
+        <div className="flex items-center pt-4 gap-4 w-[30%] text-lg ">
+          <div
+            className={`flex items-center gap-2 justify-center ${
+              likes?.includes(userData._id) && "text-blue-300 "
+            } `}
+          >
+            {likes?.includes(userData._id) ? (
+              <BiSolidLike onClick={() => handleLike()} />
+            ) : (
+              <BiLike onClick={() => handleLike()} />
+            )}
+
             <span>{likes?.includes(userData._id) ? "Liked" : "Like"}</span>
           </div>
           <div className="flex items-center gap-2 justify-center ">

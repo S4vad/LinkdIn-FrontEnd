@@ -80,31 +80,47 @@ export const Nav = () => {
         )}
 
         {searchData?.length > 0 && searchQuery.trim().length > 0 && (
-          <div className="absolute top-[90px] left-0  lg:left-[20px] w-full lg:w-[700px] bg-white min-h-[100px]  shadow-lg flex flex-col gap-5 p-5">
-            {searchData.map((search) => (
-              <div
-                className="flex gap-5 items-center border-b-1 border-b-gray-300 p-3 hover:bg-gray-50 cursor-pointer rounded-lg"
-                onClick={handleProfileClick}
-                key={search._id}
-              >
-                <div className="rounded-full overflow-hidden size-[50px] ">
-                  <img
-                    src={search.profileImage || dp}
-                    alt="dp"
-                    className="w-full h-full"
-                  />
+          <>
+            {/* Overlay for outside click */}
+            <div
+              className="fixed top-0 left-0 w-screen h-screen z-10"
+              onClick={() => {
+                setSearchData([]);
+                setActiveSearch(false);
+                setSearchQuery("");
+                setTimeout(() => {
+                  searchInputRef.current?.focus();
+                }, 0); //for better ux showng cursor on input
+              }}
+            ></div>
+
+            {/* Search Result Box */}
+            <div className="absolute top-[90px] left-0 lg:left-[20px] w-full lg:w-[700px] bg-white min-h-[100px] shadow-lg flex flex-col gap-5 p-5 max-h-[500px] overflow-auto z-20">
+              {searchData.map((search) => (
+                <div
+                  className="flex gap-5 items-center border-b-1 border-b-gray-300 p-3 hover:bg-gray-50 cursor-pointer rounded-lg"
+                  onClick={handleProfileClick}
+                  key={search._id}
+                >
+                  <div className="rounded-full overflow-hidden size-[50px] ">
+                    <img
+                      src={search.profileImage || dp}
+                      alt="dp"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <span className="font-semibold">
+                      {search.firstName} {search.lastName}
+                    </span>
+                    <span className="text-sm text-gray-800">
+                      {search.headline}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col justify-center">
-                  <span className="font-semibold">
-                    {search.firstName} {search.lastName}
-                  </span>
-                  <span className="text-sm text-gray-800">
-                    {search.headline}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
 
         <form
@@ -126,38 +142,41 @@ export const Nav = () => {
         </form>
       </div>
 
-      <div className="flex items-center gap-[20px] relative">
+      <div className="flex items-center gap-[20px] ">
         {showPopup && (
-          <div className="w-[300px] min-h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px]">
-            <div className="rounded-full overflow-hidden size-[50px]">
-              <img
-                src={userData.profileImage || dp}
-                alt="dp"
-                className="w-full h-full"
-              />
+          <>
+            <div className="fixed left-0 top-0 w-full h-screen z-10" onClick={()=>setShowPopup(false)}></div>
+            <div className="w-[300px] min-h-[300px] rounded-lg bg-white shadow-lg absolute top-[75px] flex flex-col items-center p-[20px] gap-[20px] right-[20px] lg:right-[100px] z-20 ">
+              <div className="rounded-full overflow-hidden size-[50px]">
+                <img
+                  src={userData.profileImage || dp}
+                  alt="dp"
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
+              <button
+                className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer"
+                onClick={handleProfileClick}
+              >
+                View Profile
+              </button>
+              <div className="w-full h-[1px] bg-gray-500"></div>
+              <div
+                className="flex  items-center gap-2 justify-start w-full text-gray-600 cursor-pointer"
+                onClick={() => navigate("/network")}
+              >
+                <FaUserFriends className="size-[23px] text-gray-600" />
+                <span>My networks</span>
+              </div>
+              <button
+                className="w-full  rounded-full border-2 p-[5px] border-red-400 bg-white text-red-400 cursor-pointer"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </button>
             </div>
-            <div className="font-semibold text-md">{`${userData.firstName} ${userData.lastName}`}</div>
-            <button
-              className="w-full  rounded-full border-2 border-[#2dc0ff] bg-white text-[#2dc0ff] p-[5px] cursor-pointer"
-              onClick={handleProfileClick}
-            >
-              View Profile
-            </button>
-            <div className="w-full h-[1px] bg-gray-500"></div>
-            <div
-              className="flex  items-center gap-2 justify-start w-full text-gray-600 cursor-pointer"
-              onClick={() => navigate("/network")}
-            >
-              <FaUserFriends className="size-[23px] text-gray-600" />
-              <span>My networks</span>
-            </div>
-            <button
-              className="w-full  rounded-full border-2 p-[5px] border-red-400 bg-white text-red-400 cursor-pointer"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
-          </div>
+          </>
         )}
 
         <div
@@ -174,7 +193,10 @@ export const Nav = () => {
           <FaUserFriends className="size-[23px] text-gray-600" />
           <span>My networks</span>
         </div>
-        <div className="flex flex-col items-center justify-center text-gray-600 cursor-pointer">
+        <div
+          className="flex flex-col items-center justify-center text-gray-600 cursor-pointer"
+          onClick={() => navigate("/notification")}
+        >
           <MdNotifications className="size-[23px] text-gray-600" />
           <span className="hidden lg:block">notifications</span>
         </div>

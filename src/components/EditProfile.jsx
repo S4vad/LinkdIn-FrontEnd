@@ -147,8 +147,8 @@ export const EditProfile = () => {
 
 
   return (
-    <div className="w-full h-[100vh] fixed top-0 z-[100] flex justify-center items-center">
-      <div className="w-full h-full bg-black opacity-[0.5] absolute"></div>
+    <div className="w-full h-[100vh] fixed left-0 top-0 z-[100] flex justify-center items-center">
+      <div className="w-full h-full bg-black opacity-[0.5] absolute" onClick={()=>setEdit(false)}></div>
       <input
         type="file"
         accept="image/*"

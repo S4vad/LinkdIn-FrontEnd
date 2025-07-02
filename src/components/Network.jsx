@@ -4,14 +4,14 @@ import axios from "axios";
 import dp from "../assets/dp.jpeg";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
-const socket = io(
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
-  {
-    withCredentials: true,
-  }
-);
+// const socket = io(
+//   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+//   {
+//     withCredentials: true,
+//   }
+// );
 
 export const Network = () => {
   let [connections, setConnections] = useState([]);
@@ -27,7 +27,7 @@ export const Network = () => {
 
   const handleAcceptConnection = async (acceptId) => {
     try {
-      let response = await axios.patch(`/api/connection/${acceptId}/accept`);
+      await axios.patch(`/api/connection/${acceptId}/accept`);
       setConnections(connections.filter((con) => con._id !== acceptId));
     } catch (error) {
       console.log(error);
@@ -36,7 +36,7 @@ export const Network = () => {
 
   const handleRejectConnection = async (rejectId) => {
     try {
-      let response = await axios.patch(`/api/connection/${rejectId}/reject`);
+      await axios.patch(`/api/connection/${rejectId}/reject`);
       setConnections(connections.filter((con) => con._id !== rejectId));
     } catch (error) {
       console.log(error);
@@ -45,13 +45,12 @@ export const Network = () => {
 
   useEffect(() => {
     handleGetRequests();
-
   }, []);
   return (
-    <div className="w-full h-screen bg-[#f0efe7] pt-[100px] flex flex-col  items-center gap-3">
+    <div className="w-full h-screen bg-[#f0efe7] pt-[100px] flex flex-col  items-center gap-3 ">
       <Nav />
-      <div className="w-full h-[100px] bg-white flex items-center p-3 text-5 rounded-lg shadow-lg text-gray-600">
-        Invitations {connections.length}
+      <div className="w-[90%] h-[100px] bg-white flex items-center p-3 px-10 lg:text-xl rounded-lg shadow-lg text-gray-600 max-w-[900px] ">
+        Invitations ({connections.length})
       </div>
       {connections.length > 0 && (
         <div className="w-[90%] shadow-lg rounded-lg flex flex-col gap-10 min-h-[100px] bg-white max-w-[900px] ">
