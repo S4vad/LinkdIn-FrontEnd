@@ -232,7 +232,7 @@ export const Home = () => {
 
       {/* suggested users */}
       {suggestedUser?.length > 0 ? (
-        <div className="w-full lg:w-[25%] min-h-[100px] bg-white shadow-lg hidden lg:flex flex-col  ">
+        <div className="w-full lg:w-[25%] min-h-[100px] bg-white shadow-lg hidden lg:flex flex-col  pb-4">
         <div className=" text-lg text-gray-500 px-4 py-3"> Suggested users</div>
           {suggestedUser.map((user) => (
             <div
